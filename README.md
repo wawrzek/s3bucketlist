@@ -18,10 +18,16 @@ The class represent a bucket and expose following information:
 - what is the terraform tag value
 - does the bucket has a "Terraform" tag
 - when the bucket was it is create
-- does the class has further details (which required extra time to obtain from AWS).
+- does the class has further details (which required extra time to obtain from AWS)
+- total number of objects in the bucket (extra detail)
+- total size of object in the bucket (extra detail)
+- the last time an object was updated in the bucket (extra detail)
 
 # Versions
 
+0.2 - add method to obtain the extra details;
+      simplified how details are set;
+      cosmetic changes (consistent usage of ")
 0.1 - initial code with basic bucket properties exposed and simple tests
 
 
