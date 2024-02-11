@@ -39,7 +39,6 @@ class bucket4terraform:
         objects = 0
         size = 0
         update = self.timeCreation
-        print (update)
         session = self._getSession("c")
         paginator = session.get_paginator("list_objects_v2")
         response = paginator.paginate(Bucket=self.name)
@@ -48,7 +47,6 @@ class bucket4terraform:
             for file in files:
                 objects += 1
                 size += file["Size"]
-                print (file["LastModified"])
                 if file["LastModified"] > update:
                     update = file["LastModified"]
         self.objectsNumber = objects
