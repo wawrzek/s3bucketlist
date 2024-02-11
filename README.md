@@ -26,8 +26,11 @@ The class represent a bucket and expose following information:
 # Versions
 
 0.2 - add method to obtain the extra details;
-      simplified how details are set;
-      cosmetic changes (consistent usage of ")
+      simplified how details are set (no passing profile and name around);
+      simplified session creation;
+      fix how creation time is obtained (use 'us-east-1' region: https://www.marksayson.com/blog/s3-bucket-creation-dates-s3-master-regions/);
+      cosmetic changes (consistent usage of ");
+      add extra test for enabling passing multiple bucket names;
 0.1 - initial code with basic bucket properties exposed and simple tests
 
 

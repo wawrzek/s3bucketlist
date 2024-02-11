@@ -11,20 +11,21 @@ class bucket4terraform:
 
     def __init__(self, name, profile="default", tagKey="Managed_by", tagValue="terraform", extraDetails=False):
 
+
+        self.profile = profile
         try:
-            bucket_head = self._getSession(profile, 'c').head_bucket(Bucket=name)
+            bucket_head = self._getSession('c').head_bucket(Bucket=name)
         except botocore.exceptions.ClientError as error:
             print (error)
             sys.exit(3)
 
         self.extraDetails = extraDetails
         self.name = name
-        self.profile = profile
         self.tagKey = tagKey
         self.tagValue = tagValue
-        self.timeCreation = self._getSession(profile, 'r').Bucket(name).creation_date
+        self.timeCreation = self._getSession('r').Bucket(name).creation_date
 
-        self._setFlags(self.name, self.profile)
+        self._setFlags()
 
         if extraDetails:
             addDetails()
@@ -38,7 +39,8 @@ class bucket4terraform:
         objects = 0
         size = 0
         update = self.timeCreation
-        session = self._getSession(self.profile, "c")
+        print (update)
+        session = self._getSession("c")
         paginator = session.get_paginator("list_objects_v2")
         response = paginator.paginate(Bucket=self.name)
         for page in response:
@@ -46,6 +48,7 @@ class bucket4terraform:
             for file in files:
                 objects += 1
                 size += file["Size"]
+                print (file["LastModified"])
                 if file["LastModified"] > update:
                     update = file["LastModified"]
         self.objectsNumber = objects
@@ -54,26 +57,26 @@ class bucket4terraform:
         self.extraDetails = True
 
 
-    def _getSession(self, profile, kind):
+    def _getSession(self, kind):
         try:
-            session = boto3.session.Session(profile_name=profile)
+            session = boto3.session.Session(profile_name=self.profile, region_name='us-east-1')
         except botocore.exceptions.ProfileNotFound as Error:
-            print (f"Profile '{profile}' not found in the config")
+            print (f"Profile '{self.profile}' not found in the config")
             sys.exit(2)
         if kind == 'c':
             return session.client(service_name="s3")
         elif kind == 'r':
             return session.resource("s3")
 
-    def _setFlags(self, name, profile):
+    def _setFlags(self):
 
         self.isAccessible = True
         self.isEmpty = False
         self.isTagged = True
         self.isTerraformed = False
 
-        session = self._getSession(self.profile, "r")
-        bucket = session.Bucket(name)
+        session = self._getSession("r")
+        bucket = session.Bucket(self.name)
         try:
             tagSet = bucket.Tagging().tag_set
         except botocore.exceptions.ClientError as error:
@@ -84,7 +87,7 @@ class bucket4terraform:
             else:
                 print (error)
                 print ("=" *80)
-                print ("Not handled error accessing tags for bucket %s" % name)
+                print ("Not handled error accessing tags for bucket %s" % self.name)
                 sys.exit(5)
         else:
             for tags in tagSet:
