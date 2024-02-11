@@ -21,7 +21,7 @@ class bucket4terraform:
         self.name = name
         self.aws_profile = profile
 
-        resultFlags = _setFlags(self.name, self.profile)
+        resultFlags = _setFlags(self.name, self.aws_profile)
 
         self.isAccessible = resultFlags[0]
         self.isTerraformed = resultFlags[1]
@@ -44,6 +44,7 @@ class bucket4terraform:
             elif error.response['Error']['Code'] == "AccessDenied":
                 isAccessible = False
             else:
+                print (error)
                 print ("=" *80)
                 print ("Not handled error accessing tags for bucket %s" % bucket)
                 sys.exit(5)
