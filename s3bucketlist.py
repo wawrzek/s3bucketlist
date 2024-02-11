@@ -68,10 +68,3 @@ class bucket4terraform:
             return session.client(service_name='s3')
         elif kind == 'r':
             return session.resource('s3')
-
-
-def main():
-    bucket = bucket4terraform('test')
-
-if __name__ == "__main__":
-    main()
