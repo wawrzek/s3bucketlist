@@ -1,3 +1,46 @@
 # Info
 
-This is small program to expose a few S3 bucket information.
+This is a small module/program to expose selected S3 bucket information helpful to find old and unused buckets.
+The information might be usuful for example when importing manually create buckets into Terraform.
+
+There are following classes:
+
+## Classes
+
+### bucket4terraform
+The class represent a bucket and expose following information:
+- the bucket name
+- the name of the profile used to access the bucket
+- is the bucket accessible
+- is the bucket empty
+- does the bucket has any tags
+- what is the terraform tag key
+- what is the terraform tag value
+- does the bucket has a "Terraform" tag
+- when the bucket was it is create
+- does the class has further details (which required extra time to obtain from AWS).
+
+# Versions
+
+0.1 - initial code with basic bucket properties exposed and simple tests
+
+
+# Background
+
+The precursor of this module was a simple script grouping S3 buckets.
+It was prepared to help find manually created buckets and decide which of them should be migrate to Terraform.
+I imagine it's not an uncommon situation.
+There is an AWS account(s) with plenty of S3 buckets.
+Many of them are old, created by people who left the organisation.
+There is no documentation about them.
+To help with them the original script was creating a few lists.
+For example:
+- no accessible buckets
+- empty buckets with tags
+- empty buckets without tags
+- buckets with tag indicating it was create by terraform.
+
+I thought that using a real problem will be an opportunity to refresh, or actually deepen my understanding of Python.
+Rather then stopping on a simple script I decided to prepare something with objected oriented programming.
+Maybe even a module.
+
