@@ -44,11 +44,16 @@ class bucket4terraform:
         response = paginator.paginate(Bucket=self.name)
         for page in response:
             files = page.get("Contents")
-            for file in files:
-                objects += 1
-                size += file["Size"]
-                if file["LastModified"] > update:
-                    update = file["LastModified"]
+            if files:
+                for file in files:
+                    objects += 1
+                    size += file["Size"]
+                    if file["LastModified"] > update:
+                        update = file["LastModified"]
+            else:
+                objects = 0
+                size = 0
+                update = self.timeCreation
         self.objectsNumber = objects
         self.sizeTotal = size
         self.timeLastUpdate = update
