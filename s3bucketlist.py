@@ -8,16 +8,16 @@ import sys
 
 class bucket4terraform:
 
-
     def __init__(self, name, profile="default", tagKey="Managed_by", tagValue="terraform", extraDetails=False):
-
-
         self.profile = profile
         try:
             bucket_head = self._getSession('c').head_bucket(Bucket=name)
         except botocore.exceptions.ClientError as error:
             print (error)
             sys.exit(3)
+        except botocore.exceptions.NoCredentialsError as error:
+            print (error)
+            sys.exit(33)
 
         self.extraDetails = extraDetails
         self.name = name
@@ -67,12 +67,10 @@ class bucket4terraform:
             return session.resource("s3")
 
     def _setFlags(self):
-
         self.isAccessible = True
         self.isEmpty = False
         self.isTagged = True
         self.isTerraformed = False
-
         session = self._getSession("r")
         bucket = session.Bucket(self.name)
         try:
