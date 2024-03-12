@@ -23,8 +23,27 @@ The class represent a bucket and expose following information:
 - total size of object in the bucket (extra detail)
 - the last time an object was updated in the bucket (extra detail)
 
+### bucketlists4terraform
+The class contain a set of lists helping to find orphant buckets in an account.
+All the list are created based on information provided by object from the bucket4terrafom class.
+There are following lists:
+- empty
+- tagged
+- taggedEmpty
+- notTagged
+- notTaggedEmpty
+- terraformed
+- terraformEmpty
+- notTerraformed
+
+There is also an additional list containing all buckets with not access granted to the profile.
+- notAccessible
+
+Please note that during creation the 'terraformed', 'terraformed' and 'notTerraformed' lists code check only a tag, not actual Terraform state or code.
+
 # Versions
 
+- 0.3 - add new class (bucketlists4terraform) with a simple test
 - 0.2.1 - handling empty buckets and broken credentials;
       add valid bucket test;
       cosmetic changes (remove empty lines);

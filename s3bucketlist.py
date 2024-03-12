@@ -97,3 +97,53 @@ class bucket4terraform:
                     break
                 if sum([1 for _ in bucket.objects.limit(1)]) == 0:
                     self.isEmpty = True
+
+class bucketlists4terraform:
+
+    def __init__(self, profile="default"):
+
+        self.profile = profile
+
+        session = self._getSession("c")
+
+        self.lists = [
+                "isAccessible",
+                "isEmpty",
+                "isTagged",
+                "isTerraformed",
+                ]
+
+        self.all = [b['Name'] for b in session.list_buckets()["Buckets"]]
+
+        tempLists = {}
+        for l in self.lists:
+            tempLists[l] = []
+        for b in self.all:
+            bucket = bucket4terraform(b, profile=self.profile)
+            for l in self.lists:
+                if getattr(bucket,l):
+                    tempLists[l].append(bucket.name)
+
+        self.empty = tempLists['isEmpty']
+        self.notAccessible = [b for b in self.all if b not in tempLists['isAccessible']]
+        self.tagged = [b for b in self.all if b in tempLists['isTagged']]
+        self.taggedEmpty = [b for b in self.tagged if b in self.empty]
+        self.notTagged = [b for b in self.all if b not in tempLists['isTagged']]
+        self.notTaggedEmpty = [b for b in self.notTagged if b in self.empty]
+        self.terraformed = [b for b in self.tagged if b in tempLists['isTerraformed']]
+        self.terraformEmpty = [b for b in self.terraformed if b in self.empty]
+        self.notTerraformed = [b for b in self.tagged if b not in tempLists['isTerraformed']]
+
+    def _getSession(self, kind):
+        try:
+            session = boto3.session.Session(profile_name=self.profile, region_name='us-east-1')
+        except botocore.exceptions.ProfileNotFound as Error:
+            print (f"Profile '{self.profile}' not found in the config")
+            sys.exit(2)
+        if kind == 'c':
+            return session.client(service_name="s3")
+        elif kind == 'r':
+            return session.resource("s3")
+
+
+
