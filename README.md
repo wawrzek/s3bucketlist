@@ -42,17 +42,20 @@ There is also an additional list containing all buckets with not access granted 
 Please note that during creation the 'terraformed', 'terraformed' and 'notTerraformed' lists code check only a tag, not actual Terraform state or code.
 
 # Versions
-
+- 0.3.1 - fixes:
+        bucketlists4terraform creation (now with tags);
+        notTerraformed list in the same class;
+        isEmpty flag definition in bucket4terraform class;
 - 0.3 - add new class (bucketlists4terraform) with a simple test
 - 0.2.1 - handling empty buckets and broken credentials;
-      add valid bucket test;
-      cosmetic changes (remove empty lines);
+        add valid bucket test;
+        cosmetic changes (remove empty lines);
 - 0.2 - add method to obtain the extra details;
-      simplified how details are set (no passing profile and name around);
-      simplified session creation;
-      fix how creation time is obtained (use 'us-east-1' region: https://www.marksayson.com/blog/s3-bucket-creation-dates-s3-master-regions/);
+        simplified how details are set (no passing profile and name around);
+        simplified session creation;
+        fix how creation time is obtained (use 'us-east-1' region: https://www.marksayson.com/blog/s3-bucket-creation-dates-s3-master-regions/);
       cosmetic changes (consistent usage of ");
-      add extra test for enabling passing multiple bucket names;
+        add extra test for enabling passing multiple bucket names;
 - 0.1 - initial code with basic bucket properties exposed and simple tests
 
 
