@@ -95,14 +95,16 @@ class bucket4terraform:
                 if tags == {"Key": self.tagKey, "Value": self.tagValue}:
                     self.isTerraformed = True
                     break
-                if sum([1 for _ in bucket.objects.limit(1)]) == 0:
-                    self.isEmpty = True
+        if sum([1 for _ in bucket.objects.limit(1)]) == 0:
+            self.isEmpty = True
 
 class bucketlists4terraform:
 
-    def __init__(self, profile="default"):
+    def __init__(self, profile="default", tagKey="Managed_by", tagValue="terraform"):
 
         self.profile = profile
+        self.tagKey = tagKey
+        self.tagValue = tagValue
 
         session = self._getSession("c")
 
@@ -119,7 +121,7 @@ class bucketlists4terraform:
         for l in self.lists:
             tempLists[l] = []
         for b in self.all:
-            bucket = bucket4terraform(b, profile=self.profile)
+            bucket = bucket4terraform(b, profile=self.profile, tagKey=self.tagKey, tagValue=self.tagValue)
             for l in self.lists:
                 if getattr(bucket,l):
                     tempLists[l].append(bucket.name)
@@ -133,6 +135,7 @@ class bucketlists4terraform:
         self.terraformed = [b for b in self.tagged if b in tempLists['isTerraformed']]
         self.terraformEmpty = [b for b in self.terraformed if b in self.empty]
         self.notTerraformed = [b for b in self.tagged if b not in tempLists['isTerraformed']]
+        self.notTerraformed.extend(self.notTagged)
 
     def _getSession(self, kind):
         try:
