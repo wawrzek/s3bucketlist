@@ -33,7 +33,7 @@ There are following lists:
 - notTagged
 - notTaggedEmpty
 - terraformed
-- terraformEmpty
+- terraformedEmpty
 - notTerraformed
 
 There is also an additional list containing all buckets with not access granted to the profile.
